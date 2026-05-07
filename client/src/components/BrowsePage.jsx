@@ -28,10 +28,14 @@ const BrowsePage = () => {
       const courses = ['Engineering', 'Management', 'Medicine', 'Law', 'Science'].filter(c => activeFilters.includes(c));
       const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Chennai', 'Pune'].filter(l => activeFilters.includes(l));
       const types = ['Public', 'Private'].filter(t => activeFilters.includes(t));
+      const exams = ['JEE Main', 'NEET', 'CAT', 'GATE', 'CLAT', 'MAT', 'XAT', 'BITSAT'].filter(e => activeFilters.includes(e));
+      const fees = ['Under 1L', '1L - 5L', '5L - 10L', 'Above 10L'].filter(f => activeFilters.includes(f));
 
       if (courses.length > 0) url += `&course=${courses.join(',')}`;
       if (locations.length > 0) url += `&location=${locations.join(',')}`;
       if (types.length > 0) url += `&type=${types.join(',')}`;
+      if (exams.length > 0) url += `&exams=${exams.join(',')}`;
+      if (fees.length > 0) url += `&fees=${fees.join(',')}`;
       
       const res = await axios.get(url);
       setColleges(res.data);
@@ -117,6 +121,34 @@ const BrowsePage = () => {
               </label>
             ))}
           </div>
+
+          <div className="filter-group">
+            <h4>Exams Accepted</h4>
+            {['JEE Main', 'NEET', 'CAT', 'GATE', 'CLAT', 'MAT', 'XAT', 'BITSAT'].map(exam => (
+              <label key={exam}>
+                <input 
+                  type="checkbox" 
+                  checked={activeFilters.includes(exam)}
+                  onChange={() => toggleFilter(exam)}
+                />
+                {exam}
+              </label>
+            ))}
+          </div>
+
+          <div className="filter-group">
+            <h4>Fees per Year</h4>
+            {['Under 1L', '1L - 5L', '5L - 10L', 'Above 10L'].map(fee => (
+              <label key={fee}>
+                <input 
+                  type="checkbox" 
+                  checked={activeFilters.includes(fee)}
+                  onChange={() => toggleFilter(fee)}
+                />
+                {fee}
+              </label>
+            ))}
+          </div>
         </aside>
 
         {/* Main Content */}
@@ -192,6 +224,7 @@ const BrowsePage = () => {
                         <span className="t-badge t-nirf">NIRF #{college.nirf_rank}</span>
                         <span className="t-badge t-exam">{college.exams}</span>
                         <span className="t-badge t-course">{college.college_type}</span>
+                        <span className="t-badge t-course">{college.course}</span>
                       </div>
 
                       <div className="lc-stats">

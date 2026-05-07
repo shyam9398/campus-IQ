@@ -272,19 +272,22 @@ app.get('/api/colleges/:id', async (req, res) => {
 // --- TOOLS ---
 
 app.post('/api/tools/predict-rank', async (req, res) => {
-  const { rank, course } = req.body;
-  // Mock logic for prediction
+  const { rank, course, category } = req.body;
   try {
     const result = await pool.query(
-      'SELECT * FROM colleges WHERE course ILIKE $1 ORDER BY nirf_rank ASC LIMIT 10',
+      'SELECT * FROM colleges WHERE course ILIKE $1',
       [`%${course}%`]
     );
-    // Simple mock categorization
     const colleges = result.rows;
-    const dream = colleges.filter(c => c.nirf_rank <= 10);
-    const target = colleges.filter(c => c.nirf_rank > 10 && c.nirf_rank <= 50);
-    const safe = colleges.filter(c => c.nirf_rank > 50);
-    res.json({ dream, target, safe });
+    const numRank = parseInt(rank, 10) || 10000;
+    
+    // Fake formula based on NIRF rank mapping to entrance rank for demonstration
+    // Assume NIRF #1 needs rank < 500, NIRF #10 needs rank < 5000, etc.
+    const dream = colleges.filter(c => (c.nirf_rank * 500) > numRank - 2000 && (c.nirf_rank * 500) <= numRank);
+    const target = colleges.filter(c => (c.nirf_rank * 500) > numRank && (c.nirf_rank * 500) <= numRank + 5000);
+    const safe = colleges.filter(c => (c.nirf_rank * 500) > numRank + 5000);
+    
+    res.json({ dream: dream.slice(0,5), target: target.slice(0,5), safe: safe.slice(0,5) });
   } catch (err) {
     res.status(500).json({ error: 'Rank prediction failed' });
   }

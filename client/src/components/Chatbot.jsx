@@ -41,16 +41,20 @@ const Chatbot = () => {
   };
 
   const handleQuickAction = (text) => {
-    setInput(text);
-    // Auto-submit after state update (using a small delay or triggering directly)
-    const mockEvent = { preventDefault: () => {} };
+    const userMsg = { id: Date.now(), text, sender: 'user' };
+    setMessages(prev => [...prev, userMsg]);
+    setLoading(true);
+
     setTimeout(() => {
-        const inputField = document.getElementById('chat-input');
-        if (inputField) {
-            inputField.value = text;
-            handleSend(mockEvent);
-        }
-    }, 0);
+      let botText = "I can help with that! You should check our 'Compare' page for detailed fee and placement analysis.";
+      const lowerInput = text.toLowerCase();
+      if (lowerInput.includes('fee')) botText = "Top IITs have fees around 2.1L/yr, while private colleges like BITS Pilani are around 4.5L/yr.";
+      if (lowerInput.includes('placement')) botText = "IIT Bombay leads with 98% placement rates and average packages above 22 LPA.";
+      if (lowerInput.includes('engineering') || lowerInput.includes('recommend')) botText = "For Computer Science, I recommend IIT Bombay, NIT Trichy, and BITS Pilani based on recent placement trends.";
+
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: botText, sender: 'bot' }]);
+      setLoading(false);
+    }, 800);
   };
 
   return (
