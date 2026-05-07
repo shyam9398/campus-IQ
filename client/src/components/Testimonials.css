@@ -1,0 +1,61 @@
+.testimonials {
+  background: var(--bg-color);
+}
+
+.test-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.test-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.03);
+  position: relative;
+}
+
+.quote-icon {
+  color: #e2e8f0;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.test-text {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.test-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.test-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.test-user-info h4 {
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  margin-bottom: 0.125rem;
+}
+
+.test-user-info span {
+  font-size: 0.75rem;
+  color: var(--success);
+  font-weight: 600;
+}

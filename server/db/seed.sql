@@ -1,0 +1,9 @@
+-- Sample Data for Colleges
+INSERT INTO colleges (name, location, rating, nirf_rank, fees, avg_package, placement_rate, courses, exams, type, ownership, specialization, about) VALUES
+('Indian Institute of Technology (IIT), Bombay', 'Mumbai, Maharashtra', 4.8, 3, '2.1L/yr', '22 LPA', '98%', 'B.Tech, M.Tech, Ph.D', 'JEE Advanced', 'Public', 'Government', 'Engineering', 'IIT Bombay is recognized worldwide as a leader in the field of engineering education and research.'),
+('National Institute of Technology (NIT), Trichy', 'Tiruchirappalli, Tamil Nadu', 4.6, 9, '1.5L/yr', '15 LPA', '95%', 'B.Tech, M.Tech, MBA', 'JEE Main', 'Public', 'Government', 'Engineering', 'NIT Trichy is a premier technical institution.'),
+('Birla Institute of Technology and Science (BITS)', 'Pilani, Rajasthan', 4.7, 25, '4.5L/yr', '18 LPA', '96%', 'B.E., M.Sc, Ph.D', 'BITSAT', 'Private', 'Private', 'Engineering', 'BITS Pilani is one of the best private universities in India.'),
+('Vellore Institute of Technology (VIT)', 'Vellore, Tamil Nadu', 4.4, 11, '3.5L/yr', '8 LPA', '92%', 'B.Tech, BCA', 'VITEEE', 'Private', 'Private', 'Engineering', 'VIT is known for its excellent placement records.'),
+('All India Institute of Medical Sciences (AIIMS)', 'New Delhi', 4.9, 1, '1.6k/yr', '25 LPA', '100%', 'MBBS, MD, MS', 'NEET', 'Public', 'Government', 'Medicine', 'AIIMS New Delhi is the topmost medical college in India.'),
+('Indian Institute of Management (IIM), Ahmedabad', 'Ahmedabad, Gujarat', 4.8, 1, '23L (Total)', '32 LPA', '100%', 'MBA, PGP', 'CAT', 'Public', 'Government', 'Management', 'IIM Ahmedabad is the world leader in management education.'),
+('Symbiosis Institute of Business Management (SIBM)', 'Pune, Maharashtra', 4.5, 20, '15L/yr', '20 LPA', '98%', 'MBA', 'SNAP', 'Private', 'Private', 'Management', 'SIBM Pune is a premier B-School.');
