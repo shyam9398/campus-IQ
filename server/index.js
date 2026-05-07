@@ -158,15 +158,18 @@ app.get('/api/colleges', async (req, res) => {
     counter++;
   }
   if (fees) {
-    // Assume fees field stored as string like '2.1L/yr', perform ILIKE match
-    query += ` AND fees ILIKE $${counter}`;
-    params.push(`%${fees}%`);
-    counter++;
+    const feeArr = fees.split(',');
+    const feeConditions = feeArr.map((f, i) => `fees ILIKE $${counter + i}`).join(' OR ');
+    query += ` AND (${feeConditions})`;
+    feeArr.forEach(f => params.push(`%${f}%`));
+    counter += feeArr.length;
   }
   if (exams) {
-    query += ` AND exams ILIKE $${counter}`;
-    params.push(`%${exams}%`);
-    counter++;
+    const examArr = exams.split(',');
+    const examConditions = examArr.map((e, i) => `exams ILIKE $${counter + i}`).join(' OR ');
+    query += ` AND (${examConditions})`;
+    examArr.forEach(e => params.push(`%${e}%`));
+    counter += examArr.length;
   }
 
   try {
