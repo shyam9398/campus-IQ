@@ -8,6 +8,7 @@ const { Pool } = require('pg');
 const app = express();
 const PORT = process.env.PORT || 5000;
 if (!process.env.DATABASE_URL) { console.error('DATABASE_URL not set in .env'); process.exit(1); }
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecret123';
 
 // Middleware
 app.use(cors());
@@ -121,24 +122,30 @@ app.get('/api/colleges', async (req, res) => {
   let counter = 1;
 
   if (search) {
-    query += ` AND (name ILIKE $${counter} OR courses ILIKE $${counter} OR location ILIKE $${counter})`;
+    query += ` AND (name ILIKE $${counter} OR course ILIKE $${counter} OR location ILIKE $${counter})`;
     params.push(`%${search}%`);
     counter++;
   }
   if (course) {
-    query += ` AND courses ILIKE $${counter}`;
-    params.push(`%${course}%`);
-    counter++;
+    const courses = course.split(',');
+    const courseConditions = courses.map((c, i) => `course ILIKE $${counter + i}`).join(' OR ');
+    query += ` AND (${courseConditions})`;
+    courses.forEach(c => params.push(`%${c}%`));
+    counter += courses.length;
   }
   if (location) {
-    query += ` AND location ILIKE $${counter}`;
-    params.push(`%${location}%`);
-    counter++;
+    const locations = location.split(',');
+    const locConditions = locations.map((l, i) => `location ILIKE $${counter + i}`).join(' OR ');
+    query += ` AND (${locConditions})`;
+    locations.forEach(l => params.push(`%${l}%`));
+    counter += locations.length;
   }
   if (type) {
-    query += ` AND type = $${counter}`;
-    params.push(type);
-    counter++;
+    const types = type.split(',');
+    const typeConditions = types.map((t, i) => `college_type = $${counter + i}`).join(' OR ');
+    query += ` AND (${typeConditions})`;
+    types.forEach(t => params.push(t));
+    counter += types.length;
   }
   if (minRating) {
     query += ` AND rating >= $${counter}`;
@@ -269,7 +276,7 @@ app.post('/api/tools/predict-rank', async (req, res) => {
   // Mock logic for prediction
   try {
     const result = await pool.query(
-      'SELECT * FROM colleges WHERE courses ILIKE $1 ORDER BY nirf_rank ASC LIMIT 10',
+      'SELECT * FROM colleges WHERE course ILIKE $1 ORDER BY nirf_rank ASC LIMIT 10',
       [`%${course}%`]
     );
     // Simple mock categorization

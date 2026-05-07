@@ -66,7 +66,7 @@ const CollegeDetailPage = () => {
             <div className="cd-meta-row">
               <div className="cd-meta"><MapPin size={16} /> {college.location}</div>
               <div className="cd-meta badge blue">NIRF #{college.nirf_rank}</div>
-              <div className="cd-meta badge">{college.type}</div>
+              <div className="cd-meta badge">{college.college_type}</div>
             </div>
           </div>
           <div className="cd-actions">

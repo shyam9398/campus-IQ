@@ -12,7 +12,7 @@ const Hero = () => {
         <div className="search-container fade-in-up">
           <div className="search-bar">
             <Search className="search-icon" size={24} />
-            <input type="text" placeholder="Search by college name, course, or city..." />
+            <input type="text" className="search-input" placeholder="Search by college name, course, or city..." />
             <button className="btn-primary search-btn">Search</button>
           </div>
         </div>

@@ -25,14 +25,13 @@ const BrowsePage = () => {
     try {
       let url = `${API_URL}/colleges?search=${searchQuery}`;
       
-      // Basic filter mapping (can be expanded)
-      if (activeFilters.includes('Engineering')) url += '&course=Engineering';
-      if (activeFilters.includes('Management')) url += '&course=Management';
-      if (activeFilters.includes('Bangalore')) url += '&location=Bangalore';
-      if (activeFilters.includes('Mumbai')) url += '&location=Mumbai';
-      if (activeFilters.includes('Delhi')) url += '&location=Delhi';
-      if (activeFilters.includes('Private')) url += '&type=Private';
-      if (activeFilters.includes('Public')) url += '&type=Public';
+      const courses = ['Engineering', 'Management', 'Medicine', 'Law', 'Science'].filter(c => activeFilters.includes(c));
+      const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Chennai', 'Pune'].filter(l => activeFilters.includes(l));
+      const types = ['Public', 'Private'].filter(t => activeFilters.includes(t));
+
+      if (courses.length > 0) url += `&course=${courses.join(',')}`;
+      if (locations.length > 0) url += `&location=${locations.join(',')}`;
+      if (types.length > 0) url += `&type=${types.join(',')}`;
       
       const res = await axios.get(url);
       setColleges(res.data);
@@ -192,7 +191,7 @@ const BrowsePage = () => {
                       <div className="lc-tags">
                         <span className="t-badge t-nirf">NIRF #{college.nirf_rank}</span>
                         <span className="t-badge t-exam">{college.exams}</span>
-                        <span className="t-badge t-course">{college.type}</span>
+                        <span className="t-badge t-course">{college.college_type}</span>
                       </div>
 
                       <div className="lc-stats">
