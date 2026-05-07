@@ -16,9 +16,12 @@
   background: var(--white);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
+  padding-bottom: 6rem;
   box-shadow: var(--shadow-sm);
   position: sticky;
-  top: 100px;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .filter-header {
