@@ -1,58 +1,61 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const { user, API_URL } = useAuth();
-  const [savedColleges, setSavedColleges] = useState([]);
-  const [compareTray, setCompareTray] = useState([]);
+  const { user } = useAuth();
+  
+  // Initialize from local storage
+  const [savedColleges, setSavedColleges] = useState(() => {
+    try {
+      const item = window.localStorage.getItem('savedColleges');
+      return item ? JSON.parse(item) : [];
+    } catch (error) {
+      return [];
+    }
+  });
+
+  const [compareTray, setCompareTray] = useState(() => {
+    try {
+      const item = window.localStorage.getItem('compareTray');
+      return item ? JSON.parse(item) : [];
+    } catch (error) {
+      return [];
+    }
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Sync with local storage
   useEffect(() => {
-    if (user) {
-      fetchSavedColleges();
-    } else {
-      setSavedColleges([]);
-    }
-  }, [user]);
+    window.localStorage.setItem('savedColleges', JSON.stringify(savedColleges));
+  }, [savedColleges]);
 
-  const fetchSavedColleges = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/user/saved`);
-      setSavedColleges(res.data);
-    } catch (err) {
-      console.error("Failed to fetch saved colleges");
-    }
-  };
+  useEffect(() => {
+    window.localStorage.setItem('compareTray', JSON.stringify(compareTray));
+  }, [compareTray]);
 
-  const toggleSaveCollege = async (college) => {
-    if (!user) return alert("Please login to save colleges");
-    
+  const toggleSaveCollege = (college) => {
     const isSaved = savedColleges.some(c => c.id === college.id);
-    try {
-      if (isSaved) {
-        await axios.delete(`${API_URL}/user/save/${college.id}`);
-        setSavedColleges(prev => prev.filter(c => c.id !== college.id));
-      } else {
-        await axios.post(`${API_URL}/user/save`, { collegeId: college.id });
-        setSavedColleges(prev => [...prev, college]);
-      }
-    } catch (err) {
-      console.error("Save toggle failed");
+    if (isSaved) {
+      setSavedColleges(prev => prev.filter(c => c.id !== college.id));
+    } else {
+      setSavedColleges(prev => [...prev, college]);
     }
   };
 
   const addToCompare = (college) => {
-    if (compareTray.some(c => c.id === college.id)) {
+    const isComparing = compareTray.some(c => c.id === college.id);
+    if (isComparing) {
       setCompareTray(prev => prev.filter(c => c.id !== college.id));
-      return;
+    } else {
+      if (compareTray.length >= 3) {
+        alert("You can compare a maximum of 3 colleges side-by-side.");
+        return;
+      }
+      setCompareTray(prev => [...prev, college]);
     }
-    if (compareTray.length >= 3) {
-      return alert("You can compare maximum 3 colleges");
-    }
-    setCompareTray(prev => [...prev, college]);
   };
 
   return (

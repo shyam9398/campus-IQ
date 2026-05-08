@@ -42,7 +42,7 @@ function App() {
     <AuthProvider>
       <AppProvider>
         <Router>
-          <div className="app">
+          <div className="min-h-screen bg-gray-100 font-sans text-gray-900">
             <Navbar />
             <main>
               <Routes>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { GitCompare, Plus, ShieldCheck, TrendingUp, Award, Zap, ArrowRight, X, Sparkles } from 'lucide-react';
+import { GitCompare, Plus, TrendingUp, Award, X, Sparkles, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import './ComparePage.css';
 
 const ComparePage = () => {
   const navigate = useNavigate();
@@ -10,13 +9,20 @@ const ComparePage = () => {
 
   if (compareTray.length === 0) {
     return (
-      <div className="container py-20 text-center">
-        <div className="empty-state-icon mx-auto" style={{ width: '80px', height: '80px', background: '#eff6ff', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyCenter: 'center', color: 'var(--primary-blue)', marginBottom: '1.5rem', margin: '0 auto' }}>
-           <GitCompare size={40} style={{ margin: 'auto' }} />
+      <div className="min-h-screen bg-gray-50 py-20 flex items-center justify-center">
+        <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center max-w-lg w-full">
+          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <GitCompare size={40} />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">No colleges selected</h2>
+          <p className="text-gray-500 mb-8">Select up to 3 colleges from the Browse page to see a detailed side-by-side comparison.</p>
+          <button 
+            onClick={() => navigate('/browse')} 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md inline-flex items-center gap-2"
+          >
+            Browse Colleges <ArrowRight size={20} />
+          </button>
         </div>
-        <h2 className="section-title">No colleges selected</h2>
-        <p className="section-subtitle">Select up to 3 colleges to see a detailed side-by-side comparison.</p>
-        <button onClick={() => navigate('/browse')} className="btn-primary">Browse Colleges</button>
       </div>
     );
   }
@@ -24,75 +30,91 @@ const ComparePage = () => {
   const sections = [
     { label: "Overview", keys: [
       { name: "Location", key: "location" },
-      { name: "Ownership", key: "ownership" },
-      { name: "Type", key: "type" },
-      { name: "NIRF Rank", key: "nirf_rank" },
+      { name: "Type", key: "collegeType" },
+      { name: "NIRF Rank", key: "nirfRank" },
+      { name: "Rating", key: "rating" },
+    ]},
+    { label: "Academics & Admissions", keys: [
+      { name: "Course", key: "course" },
+      { name: "Exams Accepted", key: "exams" },
+      { name: "Fees", key: "fees" },
     ]},
     { label: "Placements", keys: [
-      { name: "Avg Package", key: "avg_package" },
-      { name: "Placement Rate", key: "placement_rate" },
-    ]},
-    { label: "Fees & Exams", keys: [
-      { name: "Fees/yr", key: "fees" },
-      { name: "Exams Accepted", key: "exams" },
+      { name: "Avg Package", key: "avgPackage" },
+      { name: "Highest Package", key: "highestPackage" },
+      { name: "Placement Rate", key: "placementPercentage" },
     ]}
   ];
 
   return (
-    <div className="compare-page">
-      <div className="container">
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         
-        <header className="compare-header">
-           <h1 className="page-title">Comparison Analysis</h1>
-           <p className="page-subtitle">Detailed evaluation of your top {compareTray.length} choices</p>
+        <header className="mb-10 text-center md:text-left">
+           <h1 className="text-4xl font-bold text-gray-900 mb-3">Comparison Analysis</h1>
+           <p className="text-gray-600 text-lg">Detailed side-by-side evaluation of your top {compareTray.length} choices.</p>
         </header>
 
         {/* AI Recommendations */}
-        <div className="ai-rec-box">
-           <div className="ai-rec-header">
-              <Sparkles size={24} className="sparkle-icon" />
-              <h2>AI Verdict</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-10">
+           <div className="flex items-center gap-2 mb-6 text-blue-600">
+              <Sparkles size={24} />
+              <h2 className="text-2xl font-bold text-gray-900">AI Verdict</h2>
            </div>
-           <div className="ai-rec-grid">
-              <div className="rec-card best-overall">
-                 <Award size={20} />
-                 <div className="rec-info">
-                    <span>Best Overall</span>
-                    <strong>{compareTray[0].name}</strong>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-center gap-4 bg-blue-50 border border-blue-100 p-5 rounded-xl">
+                 <div className="bg-blue-600 text-white p-3 rounded-lg"><Award size={24} /></div>
+                 <div>
+                    <span className="text-sm font-semibold text-blue-800 uppercase tracking-wider block mb-1">Best Overall</span>
+                    <strong className="text-xl text-gray-900">{compareTray[0]?.name}</strong>
                  </div>
               </div>
-              <div className="rec-card best-roi">
-                 <TrendingUp size={20} />
-                 <div className="rec-info">
-                    <span>Best ROI</span>
-                    <strong>{compareTray[1]?.name || compareTray[0].name}</strong>
+              <div className="flex items-center gap-4 bg-green-50 border border-green-100 p-5 rounded-xl">
+                 <div className="bg-green-600 text-white p-3 rounded-lg"><TrendingUp size={24} /></div>
+                 <div>
+                    <span className="text-sm font-semibold text-green-800 uppercase tracking-wider block mb-1">Best ROI</span>
+                    <strong className="text-xl text-gray-900">{compareTray[1]?.name || compareTray[0]?.name}</strong>
                  </div>
               </div>
            </div>
         </div>
 
         {/* Comparison Table */}
-        <div className="compare-table-wrapper">
-          <table className="compare-table">
-             <thead className="sticky-header">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+             <thead>
                 <tr>
-                   <th className="feature-col">Parameters</th>
+                   <th className="w-1/4 p-6 bg-gray-50 border-b border-gray-200 font-bold text-gray-700 text-lg">
+                     Parameters
+                   </th>
                    {compareTray.map(college => (
-                      <th key={college.id} className="college-col">
-                         <button className="remove-col" onClick={() => addToCompare(college)}>
-                            <X size={14} />
+                      <th key={college.id} className="w-1/4 p-6 border-b border-l border-gray-200 relative align-top bg-white">
+                         <button 
+                           className="absolute top-4 right-4 text-gray-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-full transition"
+                           onClick={() => addToCompare(college)}
+                           title="Remove from comparison"
+                         >
+                            <X size={18} />
                          </button>
-                         <div className="comp-logo">{college.name.charAt(0)}</div>
-                         <h3>{college.name}</h3>
-                         <p>{college.location}</p>
+                         <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl font-bold mb-4">
+                           {college.name.charAt(0)}
+                         </div>
+                         <h3 className="text-xl font-bold text-gray-900 mb-1 leading-tight pr-8">{college.name}</h3>
+                         <p className="text-gray-500 font-medium text-sm">{college.location}</p>
                       </th>
                    ))}
                    {Array(3 - compareTray.length).fill(0).map((_, i) => (
-                      <th key={i} className="college-col empty">
-                         <div className="comp-logo" style={{ borderStyle: 'dashed', background: 'transparent', color: '#cbd5e1' }}>
+                      <th key={i} className="w-1/4 p-6 border-b border-l border-gray-200 align-top bg-gray-50/50">
+                         <div className="w-16 h-16 border-2 border-dashed border-gray-300 text-gray-400 rounded-xl flex items-center justify-center mb-4">
                             <Plus size={24} />
                          </div>
-                         <button className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }} onClick={() => navigate('/browse')}>Add College</button>
+                         <h3 className="text-gray-400 font-bold mb-3">Empty Slot</h3>
+                         <button 
+                           className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-semibold transition text-sm w-full" 
+                           onClick={() => navigate('/browse')}
+                         >
+                           Add College
+                         </button>
                       </th>
                    ))}
                 </tr>
@@ -100,17 +122,25 @@ const ComparePage = () => {
              <tbody>
                 {sections.map(section => (
                    <React.Fragment key={section.label}>
-                      <tr className="section-row">
-                         <td colSpan="4">{section.label}</td>
+                      <tr>
+                         <td colSpan="4" className="bg-gray-100 px-6 py-3 font-bold text-gray-800 text-sm uppercase tracking-wider border-y border-gray-200">
+                           {section.label}
+                         </td>
                       </tr>
-                      {section.keys.map(item => (
-                         <tr key={item.name}>
-                            <td className="feature-col">{item.name}</td>
+                      {section.keys.map((item, idx) => (
+                         <tr key={item.name} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-6 border-b border-gray-100 font-semibold text-gray-700">
+                              {item.name}
+                            </td>
                             {compareTray.map(college => (
-                               <td key={college.id}>{college[item.key]}</td>
+                               <td key={college.id} className="p-6 border-b border-l border-gray-100 text-gray-900">
+                                 {college[item.key] || college.examsAccepted || 'N/A'}
+                               </td>
                             ))}
                             {Array(3 - compareTray.length).fill(0).map((_, i) => (
-                               <td key={i}>—</td>
+                               <td key={i} className="p-6 border-b border-l border-gray-100 text-gray-400 text-center">
+                                 —
+                               </td>
                             ))}
                          </tr>
                       ))}
