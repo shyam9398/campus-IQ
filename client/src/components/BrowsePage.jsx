@@ -17,25 +17,11 @@ const BrowsePage = () => {
   const [activeFilters, setActiveFilters] = useState([]);
 
   useEffect(() => {
-    fetchColleges();
+    applyLocalFiltering();
   }, [searchQuery, activeFilters]);
 
-  const fetchColleges = async () => {
-    setLoading(true);
-    try {
-      if (API_URL) {
-        let url = `${API_URL}/colleges?search=${searchQuery}`;
-        await axios.get(url);
-      }
-      applyLocalFiltering();
-    } catch (err) {
-      applyLocalFiltering();
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const applyLocalFiltering = () => {
+    setLoading(true);
     let filtered = [...colleges];
 
     if (searchQuery) {
@@ -58,6 +44,7 @@ const BrowsePage = () => {
     if (exams.length > 0) filtered = filtered.filter(c => exams.some(exam => (c.exams || c.examsAccepted) && (c.exams || c.examsAccepted).includes(exam)));
 
     setCollegesList(filtered);
+    setLoading(false);
   };
 
   const toggleFilter = (filter) => {

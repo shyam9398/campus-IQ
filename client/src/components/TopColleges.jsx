@@ -4,28 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import './TopColleges.css';
+import { colleges as staticColleges } from '../data/colleges';
 
 const TopColleges = () => {
   const navigate = useNavigate();
-  const { API_URL } = useAuth();
   const { savedColleges, toggleSaveCollege, addToCompare, compareTray } = useAppContext();
   const [colleges, setColleges] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchColleges = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/colleges`);
-        setColleges(res.data.slice(0, 3)); 
-      } catch (err) {
-        console.error("Fetch colleges failed");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchColleges();
-  }, [API_URL]);
+    // Strictly use static data as requested for permanence
+    setColleges(staticColleges.slice(0, 3));
+    setLoading(false);
+  }, []);
 
   if (loading) return (
     <div className="container py-12 text-center">
@@ -36,8 +27,7 @@ const TopColleges = () => {
   return (
     <section className="top-colleges">
       <div className="container">
-        <h2 className="section-title">Top Colleges For You</h2>
-        <p className="section-subtitle">Recommended based on historical trends and success rates</p>
+        <h2 className="section-title mb-8">Top Colleges For You</h2>
 
         <div className="college-grid">
           {colleges.map(college => {
